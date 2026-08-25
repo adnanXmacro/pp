@@ -13,14 +13,23 @@
 
 <div class="grain"></div>
 
-<a href="index.html" class="brand-mark">PIG<span>PEN</span></a>
-
-<nav class="case-nav">
+<header class="site-header">
+  <a href="index.html" class="brand-mark"><span class="brand-icon"></span>PIG<span>PEN</span></a>
+  <nav class="case-nav">
+    <a href="index.html" class="case-tab"><span class="tab-num">00</span><span class="tab-label">Home</span></a>
+    <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">Story</span></a>
+    <a href="cast.html" class="case-tab"><span class="tab-num">02</span><span class="tab-label">Cast</span></a>
+    <a href="backstory.html" class="case-tab"><span class="tab-num">03</span><span class="tab-label">Backstory</span></a>
+    <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">Collab</span></a>
+  </nav>
+</header>
+<div class="scroll-progress"><i id="scrollProgressFill"></i></div>
+<nav class="case-nav-mobile">
   <a href="index.html" class="case-tab"><span class="tab-num">00</span><span class="tab-label">Home</span></a>
-  <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">The Story</span></a>
+  <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">Story</span></a>
   <a href="cast.html" class="case-tab"><span class="tab-num">02</span><span class="tab-label">Cast</span></a>
   <a href="backstory.html" class="case-tab"><span class="tab-num">03</span><span class="tab-label">Backstory</span></a>
-  <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">8BiT Collab</span></a>
+  <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">Collab</span></a>
 </nav>
 
 <!-- HERO -->
@@ -93,7 +102,8 @@
   <div class="stage-sticky">
     <div class="chainlink"></div>
     <div class="dots" id="dots"></div>
-    <div class="stage-copy">
+    <div class="stage-glow" id="stageGlow"></div>
+    <div class="stage-copy" id="stageCopy">
       Everyone in this house has a reason to lie to you.
       <small>Chapter Twelve — The Pen Out Back</small>
     </div>
@@ -148,10 +158,13 @@
 
 <script src="common.js"></script>
 <script>
-  // parallax figures
+  // ---------- parallax figures, now driven off the shared rAF ticker ----------
+  // Reading getBoundingClientRect every frame (rather than only on the
+  // 'scroll' event) means the motion keeps up even during fast trackpad
+  // flicks or momentum scrolling, instead of stepping between updates.
   const parallaxWoman = document.getElementById('parallaxWoman');
   const parallaxHouse = document.getElementById('parallaxHouse');
-  function onScrollParallax() {
+  PP.onFrame(() => {
     const vh = window.innerHeight;
     [parallaxWoman, parallaxHouse].forEach(el => {
       if (!el) return;
@@ -159,27 +172,54 @@
       const progress = r.top / vh;
       el.style.transform = `translateY(${progress * -60}px) scale(1.02)`;
     });
-  }
-  window.addEventListener('scroll', onScrollParallax, { passive: true });
-  onScrollParallax();
+  });
 
-  // 3D scroll stage
+  // ---------- 3D scroll stage ----------
   const stage = document.getElementById('stage');
   const stageMask = document.getElementById('stageMask');
-  function onStageScroll() {
+  const stageGlow = document.getElementById('stageGlow');
+  const stageCopy = document.getElementById('stageCopy');
+
+  let mouseTargetX = 0, mouseTargetY = 0, mouseNowX = 0, mouseNowY = 0;
+  window.addEventListener('pointermove', (e) => {
+    mouseTargetX = (e.clientX / window.innerWidth - 0.5);
+    mouseTargetY = (e.clientY / window.innerHeight - 0.5);
+  });
+
+  let pNow = 0;
+  PP.onFrame(() => {
     const r = stage.getBoundingClientRect();
     const total = r.height - window.innerHeight;
-    let p = -r.top / total;
-    p = Math.max(0, Math.min(1, p));
-    const rotY = (p - 0.5) * 120;
-    const rotX = (p - 0.5) * -30;
-    const scale = 0.75 + Math.sin(p * Math.PI) * 0.35;
-    const z = Math.sin(p * Math.PI) * 80;
+    let pTarget = -r.top / total;
+    pTarget = Math.max(0, Math.min(1, pTarget));
+
+    // Ease the progress value itself, not just the transform, so the
+    // rotation trails the scroll slightly instead of tracking it 1:1 —
+    // that lag is what reads as weight rather than a raw scroll-jack.
+    pNow = PP.lerp(pNow, pTarget, 0.07);
+    mouseNowX = PP.lerp(mouseNowX, mouseTargetX, 0.05);
+    mouseNowY = PP.lerp(mouseNowY, mouseTargetY, 0.05);
+
+    const idle = Math.sin(performance.now() / 1400) * 3;
+    const rotY = (pNow - 0.5) * 130 + mouseNowX * 14 + idle;
+    const rotX = (pNow - 0.5) * -32 + mouseNowY * 10;
+    const scale = 0.72 + Math.sin(pNow * Math.PI) * 0.36;
+    const z = Math.sin(pNow * Math.PI) * 90;
+
     stageMask.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${scale}) translateZ(${z}px)`;
-    stageMask.style.opacity = 0.35 + Math.sin(p * Math.PI) * 0.65;
-  }
-  window.addEventListener('scroll', onStageScroll, { passive: true });
-  onStageScroll();
+    stageMask.style.opacity = 0.32 + Math.sin(pNow * Math.PI) * 0.68;
+
+    if (stageGlow) {
+      const glowScale = 0.6 + Math.sin(pNow * Math.PI) * 0.55;
+      stageGlow.style.transform = `translate(${mouseNowX * -20}px, ${mouseNowY * -20}px) scale(${glowScale})`;
+      stageGlow.style.opacity = 0.35 + Math.sin(pNow * Math.PI) * 0.5;
+    }
+    if (stageCopy) {
+      const copyFade = Math.sin(pNow * Math.PI);
+      stageCopy.style.opacity = (0.15 + copyFade * 0.85).toFixed(2);
+      stageCopy.style.transform = `translateY(${(1 - copyFade) * -14}px)`;
+    }
+  });
 
   pigpenDots(document.getElementById('dots'), 40);
   pigpenRain(document.getElementById('rainLayer'), 70);

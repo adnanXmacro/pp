@@ -1,12 +1,28 @@
-// ---------- scroll-reveal, used on every page ----------
+// ---------- shared animation ticker ----------
+// Every page-specific effect (parallax, 3D mask rotation, hero tilt)
+// registers a callback here instead of listening to 'scroll' directly.
+// Running everything off one rAF loop keeps motion locked to the
+// display's frame rate rather than however often 'scroll' events fire,
+// which is what makes the scroll-driven effects feel smooth.
+window.PP = window.PP || {
+  lerp: (a, b, n) => (1 - n) * a + n * b,
+  _cbs: [],
+  onFrame(fn) { this._cbs.push(fn); },
+};
+(function ppLoop() {
+  for (let i = 0; i < window.PP._cbs.length; i++) window.PP._cbs[i]();
+  requestAnimationFrame(ppLoop);
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
+  // ---------- scroll-reveal ----------
   const revealEls = document.querySelectorAll('.reveal, .card');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
   }, { threshold: 0.18 });
   revealEls.forEach(el => io.observe(el));
 
-  // ---------- highlight the active case-file tab ----------
+  // ---------- highlight the active case-file tab (desktop + mobile bar) ----------
   const here = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('.case-tab').forEach(tab => {
     const href = tab.getAttribute('href');
@@ -14,6 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
       tab.classList.add('active');
     }
   });
+
+  // ---------- scroll progress rail ----------
+  const fill = document.getElementById('scrollProgressFill');
+  if (fill) {
+    PP.onFrame(() => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const p = max > 0 ? (window.scrollY / max) * 100 : 0;
+      fill.style.width = p.toFixed(2) + '%';
+    });
+  }
 
   // ---------- card tilt on pointer, wherever .card exists ----------
   document.querySelectorAll('.card').forEach(card => {

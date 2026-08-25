@@ -13,14 +13,23 @@
 
 <div class="grain"></div>
 
-<a href="index.html" class="brand-mark">PIG<span>PEN</span></a>
-
-<nav class="case-nav">
+<header class="site-header">
+  <a href="index.html" class="brand-mark"><span class="brand-icon"></span>PIG<span>PEN</span></a>
+  <nav class="case-nav">
+    <a href="index.html" class="case-tab"><span class="tab-num">00</span><span class="tab-label">Home</span></a>
+    <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">Story</span></a>
+    <a href="cast.html" class="case-tab"><span class="tab-num">02</span><span class="tab-label">Cast</span></a>
+    <a href="backstory.html" class="case-tab"><span class="tab-num">03</span><span class="tab-label">Backstory</span></a>
+    <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">Collab</span></a>
+  </nav>
+</header>
+<div class="scroll-progress"><i id="scrollProgressFill"></i></div>
+<nav class="case-nav-mobile">
   <a href="index.html" class="case-tab"><span class="tab-num">00</span><span class="tab-label">Home</span></a>
-  <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">The Story</span></a>
+  <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">Story</span></a>
   <a href="cast.html" class="case-tab"><span class="tab-num">02</span><span class="tab-label">Cast</span></a>
   <a href="backstory.html" class="case-tab"><span class="tab-num">03</span><span class="tab-label">Backstory</span></a>
-  <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">8BiT Collab</span></a>
+  <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">Collab</span></a>
 </nav>
 
 <!-- HERO -->
@@ -121,7 +130,7 @@
     </div>
   </div>
   <div class="foot-bottom">
-    <span>PIGPEN — TRIBUTE SITE</span>
+    <span>PIGPEN — AN UNOFFICIAL FAN TRIBUTE SITE</span>
     <span>ALL RIGHTS TO THE SERIES BELONG TO ITS CREATORS &amp; WEBTOON</span>
   </div>
 </footer>
@@ -129,12 +138,32 @@
 <script src="common.js"></script>
 <script>
   const heroMask = document.getElementById('heroMask');
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (heroMask) {
-      heroMask.style.transform = `rotateY(${-8 + y * 0.01}deg) rotateX(${6 - y * 0.01}deg) translateY(${y * 0.15}px) scale(${1 - Math.min(y / 4000, 0.06)})`;
-    }
-  }, { passive: true });
+
+  // Track raw scroll + pointer targets, then ease toward them every
+  // frame instead of snapping the transform straight to the event value.
+  // That's what gives the mask its weighted, floaty feel instead of
+  // jumping in lockstep with the scrollbar.
+  let scrollTarget = 0, scrollNow = 0;
+  let mouseTargetX = 0, mouseTargetY = 0, mouseNowX = 0, mouseNowY = 0;
+
+  window.addEventListener('scroll', () => { scrollTarget = window.scrollY; }, { passive: true });
+  window.addEventListener('pointermove', (e) => {
+    mouseTargetX = (e.clientX / window.innerWidth - 0.5);
+    mouseTargetY = (e.clientY / window.innerHeight - 0.5);
+  });
+
+  if (heroMask) {
+    PP.onFrame(() => {
+      scrollNow = PP.lerp(scrollNow, scrollTarget, 0.09);
+      mouseNowX = PP.lerp(mouseNowX, mouseTargetX, 0.045);
+      mouseNowY = PP.lerp(mouseNowY, mouseTargetY, 0.045);
+      const idle = Math.sin(performance.now() / 1600) * 1.6; // slow, subtle breathing
+      const rotY = -8 + scrollNow * 0.01 + mouseNowX * 11;
+      const rotX = 6 - scrollNow * 0.01 - mouseNowY * 7 + idle;
+      const scale = 1 - Math.min(scrollNow / 4000, 0.06);
+      heroMask.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg) translateY(${scrollNow * 0.15}px) scale(${scale})`;
+    });
+  }
 </script>
 
 </body>
