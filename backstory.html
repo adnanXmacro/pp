@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backstory — PIGPEN (full spoilers)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;700;900&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .gate{
+    min-height:100svh; display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+    background:radial-gradient(70% 60% at 50% 30%, #241536 0%, var(--void) 70%);
+  }
+  .gate .chainlink{opacity:0.3;}
+  .gate-box{
+    position:relative; z-index:2; text-align:center; max-width:560px; padding:0 6vw;
+  }
+  .gate-box .file-tag{margin-bottom:2rem;}
+  .gate-box h1{font-size:clamp(2.6rem,7vw,4.6rem); font-weight:900; margin-bottom:1.4rem;}
+  .gate-box p{color:var(--lavender); line-height:1.85; margin-bottom:2.2rem;}
+  #dossierWrap{display:none;}
+  #dossierWrap.show{display:block;}
+  .gate.hidden{display:none;}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<a href="index.html" class="brand-mark">PIG<span>PEN</span></a>
+
+<nav class="case-nav">
+  <a href="index.html" class="case-tab"><span class="tab-num">00</span><span class="tab-label">Home</span></a>
+  <a href="story.html" class="case-tab"><span class="tab-num">01</span><span class="tab-label">The Story</span></a>
+  <a href="cast.html" class="case-tab"><span class="tab-num">02</span><span class="tab-label">Cast</span></a>
+  <a href="backstory.html" class="case-tab"><span class="tab-num">03</span><span class="tab-label">Backstory</span></a>
+  <a href="collab.html" class="case-tab"><span class="tab-num">04</span><span class="tab-label">8BiT Collab</span></a>
+</nav>
+
+<!-- GATE -->
+<section class="gate" id="gate">
+  <div class="chainlink"></div>
+  <div class="gate-box reveal in-view">
+    <span class="file-tag">Case File <b>#003</b> — Restricted</span>
+    <h1>THIS FILE IS SEALED.</h1>
+    <p>Everything past this point covers the full ending of PIGPEN — who the man on the beach really is, what the pigpen actually means, and how the story closes. If you haven't finished the series, it'll all mean more if you read it first.</p>
+    <button class="spoiler-btn" id="breakSeal" type="button">Break the seal</button>
+    <div class="entry-log">
+      <div>&gt; file status: <span class="ok">locked</span></div>
+      <div>&gt; episodes required: 68 / 68</div>
+      <div>&gt; recommend closing this tab and reading the series first</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOSSIER -->
+<div id="dossierWrap">
+  <section class="backstory">
+    <div class="wrap dossier reveal in-view">
+      <span class="tag">Full-series spoilers from here down</span>
+      <h2 style="font-size:clamp(2rem,4.5vw,3.2rem); font-weight:800; margin-bottom:1.6rem;">What the Pigpen Really Is</h2>
+
+      <h4>The man has a name</h4>
+      <p>He isn't as blank as he seems, and the story spends most of its second half proving it. The shore, the guesthouse, the family — none of it is what it presents itself as, and neither is he. The amnesia's real. It's just covering for something he did, not something that was done to him.</p>
+
+      <h4>The family is wearing borrowed faces</h4>
+      <p>The household isn't a household. It's built from people already tangled up in his past, reassembled on the island wearing the features of everyone he's wronged. Recognizing them for what they actually are takes up most of the back half of the story.</p>
+
+      <h4>Jinu and the pen out back</h4>
+      <p>The mask, and the pen it's named for, both trace back to a boy called Jinu — someone the protagonist failed, badly, and never found a way to carry afterward. The mask isn't a costume. It's a wound that never closed over.</p>
+
+      <h4>Tae-hee was listening the whole time</h4>
+      <p>The quiet one, the employee who barely talks — his silence has a reason behind it. He's been hearing the voices of the people from the protagonist's past for most of the series, long before the reader gets let in on why.</p>
+
+      <h4>An ending that refuses to resolve</h4>
+      <p>PIGPEN closes without confirming which half of its protagonist wins — the part looking for forgiveness, or the part that never stopped being dangerous. The father finds Jinu's body near the end, which is as close to closure as the story is willing to give anyone. Everything else, the reader has to sit with.</p>
+
+      <div class="credit">Story by Carnby Kim · Art by Beom Sick Cheon · PIGPEN, 2019–2020, Naver Webtoon / WEBTOON</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">PIG<span>PEN</span></div>
+        <p style="color:var(--lavender-dim); font-size:0.85rem; margin-top:0.8rem; max-width:32ch;">Story by Carnby Kim · Art by Beom Sick Cheon. Complete, 68 episodes, originally on Naver Webtoon / WEBTOON.</p>
+      </div>
+      <div class="foot-links">
+        <div class="foot-col">
+          <h4>Explore</h4>
+          <a href="story.html">The Story</a>
+          <a href="cast.html">Cast</a>
+          <a href="index.html">Home</a>
+        </div>
+        <div class="foot-col">
+          <h4>Read it</h4>
+          <a href="https://www.webtoons.com/en/thriller/pigpen/list?title_no=2275" target="_blank" rel="noopener">Official WEBTOON page ↗</a>
+          <a href="collab.html">8BiT Collab</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>PIGPEN — AN UNOFFICIAL FAN TRIBUTE SITE</span>
+      <span>ALL RIGHTS TO THE SERIES BELONG TO ITS CREATORS &amp; WEBTOON</span>
+    </div>
+  </footer>
+</div>
+
+<script src="common.js"></script>
+<script>
+  const breakSeal = document.getElementById('breakSeal');
+  const gate = document.getElementById('gate');
+  const dossierWrap = document.getElementById('dossierWrap');
+  breakSeal.addEventListener('click', () => {
+    gate.classList.add('hidden');
+    dossierWrap.classList.add('show');
+    dossierWrap.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
